@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Socket</title>
+</head>
+
+<body>
+
+    <h1>Working...</h1>
+
+    <p>
+        logged user
+        <input id="mass_user" type="text" autocomplete="off" placeholder="enter your name">
+    </p>
+
+    <p>
+        to User...
+        <input id="mass_to" type="text" autocomplete="off" placeholder="to user...">
+    </p>
+
+    <p>
+        message
+        <input id="mass_mass" type="text" autocomplete="off" placeholder="enter your message">
+    </p>
+
+    <ul id="list"></ul>
+
+    <span id="new_mass"></span><b id="bold"></b>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.1.2/socket.io.js"></script>
+    <script type="text/javascript">
+        const socket = io()
+
+        mass_user.onkeyup = ((e) => {
+            if (e.keyCode === 13) {
+                socket.emit('mass', mass_user.value.trim())
+                mass_user.value = ''
+            }
+        })
+
+        socket.on('r_mass', (data) => {
+            const newLi = document.createElement('li')
+            newLi.textContent = data
+
+            list.appendChild(newLi)
+        })
+
+        mass_mass.onkeyup = ((e) => {
+            if (e.keyCode === 13) {
+                socket.emit('mass_To', {
+                    to: mass_to.value.trim(),
+                    message: mass_mass.value.trim()
+                })
+                mass_mass.value = ''
+                mass_to.value = ''
+            }
+        })
+
+        socket.on('res_mass', (data) => {
+            new_mass.textContent = `${data.message}`
+            bold.textContent = ` from ${data.from}`
+        })
+
+    </script>
+</body>
+
+</html>
